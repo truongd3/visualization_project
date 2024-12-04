@@ -106,12 +106,16 @@ class Visualization1 extends Component {
         .attr('height', d => height - yScale(d.average_monthly_balance))
         .attr('fill', 'green');        
 
-      svg.select('g')
-        .append('text')
+      svg.selectAll('title')
+        .data(['Title'])
+        .join('text')
         .attr('class','title')
-        .attr('x',0)
-        .attr('y',0)
-        .text('Title')
+        .attr('x',svgWidth/2-margin.left+5)
+        .attr('y',-20)
+        .text('Credit Score Group vs. Salary & Debt')
+        .attr('font-size',18)
+        .attr('font-weight','bold')
+        .attr('text-anchor','middle')
 
         const legend = d3.select("#legend").attr("width", 300).attr("height", 200).select("g").attr('transform',`translate(-50,0)`)
 
