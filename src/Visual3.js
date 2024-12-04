@@ -19,7 +19,7 @@ class Visual3 extends Component {
   createLineChart() {
     const data = this.props.csv_data;
     if (!data) return 0;
-    console.log(data);
+    //console.log(data);
 
     const svgWidth = 800, svgHeight = 400;
     const margin = { top: 50, right: 30, bottom: 50, left: 60 },
@@ -28,7 +28,7 @@ class Visual3 extends Component {
 
     // Parse data
     const parsedData = data;
-
+    
     // Sort data by age to ensure line chart is smooth
     // parsedData.sort((a, b) => a.age - b.age);
 

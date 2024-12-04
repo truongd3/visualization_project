@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 import FileUpload from "./FileUpload";
 import Visual3 from "./Visual3";
+import Visualization1 from "./Visualization1";
 
 class App extends Component {
   constructor(props) {
@@ -20,7 +21,7 @@ class App extends Component {
       <div>
         <FileUpload set_data={this.set_data}></FileUpload>
         <div className="parent">
-          <Visual3 csv_data={this.state.data}></Visual3>
+          <Visualization1 csv_data={this.state.data}></Visualization1>
         </div>
       </div>
     );
