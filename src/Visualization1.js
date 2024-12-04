@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import * as d3 from "d3";
+import './Visual1.css';
 
 function calculateAverages(data) {
-  // Initialize an object to store the sums and counts
+
   const totals = {
     Low: { monthly_balance: 0, outstanding_debt: 0, count: 0 },
     Average: { monthly_balance: 0, outstanding_debt: 0, count: 0 },
     High: { monthly_balance: 0, outstanding_debt: 0, count: 0 },
   };
 
-  // Iterate over each record in the data
+
   data.forEach(obj => {
     const creditScoreGroup = obj.credit_score;
 
@@ -20,7 +21,6 @@ function calculateAverages(data) {
     }
   });
 
-  // Prepare the final result in a flat structure
   const averages = Object.keys(totals).map(group => {
     const groupData = totals[group];
     return {
@@ -46,9 +46,9 @@ class Visualization1 extends Component {
     if (!data) return 0;
     //console.log(data);
 
-    const svgWidth = 800, svgHeight = 400;
+    const svgWidth = 500, svgHeight = 400;
     const margin = { top: 50, right: 30, bottom: 50, left: 60 },
-          width = 800 - margin.left - margin.right,
+          width = 500 - margin.left - margin.right,
           height = 400 - margin.top - margin.bottom;
     
 
@@ -67,7 +67,7 @@ class Visualization1 extends Component {
                                    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
  
-    // X-axis
+
     svg.selectAll('.x.axis').data([null]).join('g').attr('class', 'x axis')
        .attr("transform", `translate(0, ${height})`)
        .call(d3.axisBottom(xScale))
@@ -75,7 +75,7 @@ class Visualization1 extends Component {
        .attr("x", width / 2)
        .attr("y", 40)
        .text("Credit Score Group").style("fill", "black");
-    // Y-axis
+
     svg.selectAll('.y.axis').data([null]).join('g').attr('class', 'y axis')
        .call(d3.axisLeft(yScale))
        .append("text")
@@ -90,29 +90,56 @@ class Visualization1 extends Component {
         .data(newData)
         .join('rect')
         .attr('class','debt')
-        .attr('x', d => xScale(d.credit_score))  // Correctly map credit_score to x position
-        .attr('y', d => yScale(d.average_outstanding_debt)) // Correctly map outstanding_debt to y position
-        .attr('width', xScale.bandwidth()/2)       // Use xScale.bandwidth() for bar width
-        .attr('height', d => height - yScale(d.average_outstanding_debt)) // Calculate bar height
-        .attr('fill', 'red');                    // Set bar color
+        .attr('x', d => xScale(d.credit_score))
+        .attr('y', d => yScale(d.average_outstanding_debt))
+        .attr('width', xScale.bandwidth()/2)
+        .attr('height', d => height - yScale(d.average_outstanding_debt))
+        .attr('fill', 'red');
   
       svg.selectAll('balance')
         .data(newData)
         .join('rect')
         .attr('class','balance')
-        .attr('x', d => xScale(d.credit_score) + xScale.bandwidth()/2)  // Correctly map credit_score to x position
-        .attr('y', d => yScale(d.average_monthly_balance)) // Correctly map outstanding_debt to y position
-        .attr('width', xScale.bandwidth()/2)       // Use xScale.bandwidth() for bar width
-        .attr('height', d => height - yScale(d.average_monthly_balance)) // Calculate bar height
+        .attr('x', d => xScale(d.credit_score) + xScale.bandwidth()/2)
+        .attr('y', d => yScale(d.average_monthly_balance))
+        .attr('width', xScale.bandwidth()/2)
+        .attr('height', d => height - yScale(d.average_monthly_balance))
         .attr('fill', 'green');        
 
-  }
+      svg.select('g')
+        .append('text')
+        .attr('class','title')
+        .attr('x',0)
+        .attr('y',0)
+        .text('Title')
+
+        const legend = d3.select("#legend").attr("width", 300).attr("height", 200).select("g").attr('transform',`translate(-50,0)`)
+
+      legend.selectAll('legend-rect')
+        .data(['Monthly Balance', 'Outstanding Debt'])
+        .join('rect')
+        .attr('class', 'legend-item')
+        .attr('y', (d,i)=>(200/2 + (i*30)))
+        .attr('x', 50)
+        .attr('width', 20)
+        .attr('height', 20)
+        .attr('fill', d=>(d=='Monthly Balance' ? 'Green' : 'Red'));
+
+      legend.selectAll('legend-item')
+        .data(['Monthly Balance', 'Outstanding Debt'])
+        .join('text')
+        .attr('x', 80)
+        .attr('y', (d,i)=>(200/2 + (i*30) + 15))
+        .text(d => d);
+
+  } 
   
 
   render(){
     return (
       <div className="child1">
         <svg id="mysvg"><g></g></svg>
+        <svg id="legend"><g></g></svg>
       </div>
     );
   };
