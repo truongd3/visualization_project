@@ -59,7 +59,7 @@ class Visualization1 extends Component {
     const debtAvg = d3.max(newData, d => d.average_outstanding_debt);
     const balanceAvg = d3.max(newData, d => d.average_monthly_balance);
     const actualMax = debtAvg>balanceAvg ? debtAvg : balanceAvg;
-    const yScale = d3.scaleLinear().domain([0, actualMax]).range([height, 0]);
+    const yScale = d3.scaleLinear().domain([0, actualMax+100]).range([height, 0]);
 
 
     const svg = d3.select("#mysvg").attr("width", svgWidth).attr("height", svgHeight)
@@ -74,7 +74,8 @@ class Visualization1 extends Component {
        .append("text")
        .attr("x", width / 2)
        .attr("y", 40)
-       .text("Credit Score Group").style("fill", "black");
+       .text("Credit Score Group").style("fill", "black")
+       .attr('font-weight','bold');
 
     svg.selectAll('.y.axis').data([null]).join('g').attr('class', 'y axis')
        .call(d3.axisLeft(yScale))
@@ -83,7 +84,8 @@ class Visualization1 extends Component {
        .attr("y", -40)
        .attr("transform", "rotate(-90)")
        .attr("text-anchor", "middle")
-       .text("Average Amount in USD").style("fill", "black");
+       .text("Amount in USD").style("fill", "black")
+       .attr('font-weight','bold');
 
 
        svg.selectAll('debt')
@@ -112,7 +114,7 @@ class Visualization1 extends Component {
         .attr('class','title')
         .attr('x',svgWidth/2-margin.left+5)
         .attr('y',-20)
-        .text('Credit Score Group vs. Salary & Debt')
+        .text('Credit Score Group vs. Balance & Debt')
         .attr('font-size',18)
         .attr('font-weight','bold')
         .attr('text-anchor','middle')
@@ -120,21 +122,22 @@ class Visualization1 extends Component {
         const legend = d3.select("#legend").attr("width", 300).attr("height", 200).select("g").attr('transform',`translate(-50,0)`)
 
       legend.selectAll('legend-rect')
-        .data(['Monthly Balance', 'Outstanding Debt'])
+        .data(['Average Monthly Balance', 'Total Outstanding Debt'])
         .join('rect')
         .attr('class', 'legend-item')
         .attr('y', (d,i)=>(200/2 + (i*30)))
         .attr('x', 50)
         .attr('width', 20)
         .attr('height', 20)
-        .attr('fill', d=>(d=='Monthly Balance' ? 'Green' : 'Red'));
+        .attr('fill', d=>(d==='Average Monthly Balance' ? 'Green' : 'Red'));
 
       legend.selectAll('legend-item')
-        .data(['Monthly Balance', 'Outstanding Debt'])
+        .data(['Average Monthly Balance', 'Total Outstanding Debt'])
         .join('text')
         .attr('x', 80)
         .attr('y', (d,i)=>(200/2 + (i*30) + 15))
-        .text(d => d);
+        .text(d => d)
+        .attr('font-size',14);
 
   } 
   
