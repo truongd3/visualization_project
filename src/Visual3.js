@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import * as d3 from "d3";
+import calculateAverageInvestedAmountByAge from "./calculateAverageInvestedAmountByAge";
+import { sliderBottom } from "d3-simple-slider";
 
 class Visual3 extends Component {
   constructor(props) {
@@ -10,45 +12,39 @@ class Visual3 extends Component {
   }
 
   componentDidMount() {
-    this.createLineChart();
   }
   componentDidUpdate() {
     this.createLineChart();
   }
 
   createLineChart() {
-    const data = this.props.csv_data;
+    const data = calculateAverageInvestedAmountByAge(this.props.csv_data);
     if (!data) return 0;
-    //console.log(data);
+    console.log(data);
 
-    const svgWidth = 800, svgHeight = 400;
+    const svgWidth = 500, svgHeight = 400;
     const margin = { top: 50, right: 30, bottom: 50, left: 60 },
-          width = 800 - margin.left - margin.right,
+          width = 500 - margin.left - margin.right,
           height = 400 - margin.top - margin.bottom;
 
-    // Parse data
-    const parsedData = data;
-    
-    // Sort data by age to ensure line chart is smooth
-    // parsedData.sort((a, b) => a.age - b.age);
-
     const xScale = d3.scaleLinear().domain(d3.extent(data, d => d.age)).range([0, width]);
-    const yScale = d3.scaleLinear().domain([0, d3.max(data, d => d.average_amount_invested)]).range([height, 0]);
+    const yScale = d3.scaleLinear().domain([d3.min(data, d => d.average_amount_invested) - 10, d3.max(data, d => d.average_amount_invested)]).range([height, 0]);
 
     const lineGenerator = d3.line().x(d => xScale(d.age))
                                    .y(d => yScale(d.average_amount_invested))
                                    .curve(d3.curveCardinal);
     var pathData = lineGenerator(data);
 
-    const svg = d3.select("#mysvg").attr("width", svgWidth).attr("height", svgHeight)
+    const svg = d3.select("#mysvg2").attr("width", svgWidth).attr("height", svgHeight)
                                    .select("g")
                                    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    svg.selectAll("*").remove();
 
     // Add the line path
     svg.selectAll("path").data([pathData]).join("path")
        .attr("fill", "none")
-       .attr("stroke", "#b2df8a")
-       .attr("stroke-width", 2)
+       .attr("stroke", "#f28b82")
+       .attr("stroke-width", 3)
        .attr("d", myd => myd);
 
     // X-axis
@@ -58,7 +54,7 @@ class Visual3 extends Component {
        .append("text")
        .attr("x", width / 2)
        .attr("y", 40)
-       .text("Age").style("fill", "black");
+       .text("Age").style("font-size", "16px").style("fill", "black").style("font-weight", "bold");
     // Y-axis
     svg.selectAll('.y.axis').data([null]).join('g').attr('class', 'y axis')
        .call(d3.axisLeft(yScale))
@@ -67,20 +63,46 @@ class Visual3 extends Component {
        .attr("y", -40)
        .attr("transform", "rotate(-90)")
        .attr("text-anchor", "middle")
-       .text("Average Amount Invested Monthly").style("fill", "black");
+       .text("Average Amount Invested Monthly").style("font-size", "16px").style("fill", "black").style("font-weight", "bold");
 
     // Add circles at data points
-    svg.selectAll(".circle").data(parsedData).enter().append("circle")
+    svg.selectAll(".circle").data(data).enter().append("circle")
               .attr("cx", d => xScale(d.age))
               .attr("cy", d => yScale(d.average_amount_invested))
-              .attr("r", 4)
-              .attr("fill", "red");
+              .attr("r", 3)
+              .attr("fill", "#ea4335");
+
+    const sliderRange = sliderBottom()
+      .min(d3.min(data, d => d.age))
+      .max(d3.max(data, d => d.age))
+      .width(200)
+      .ticks(3)
+      .default([d3.min(data, d => d.age), d3.max(data, d => d.age)])
+      .fill('#85bb65')
+      .on('onchange', val => {
+          const f_data = this.state.original_data.filter(d => d.age >= val[0] && d.age <= val[1]);
+          this.setState({ filtered_data: f_data });
+      });
+
+    const gRange = d3.select('.slider-range')
+      .attr('width', 200)
+      .attr('height', 100)
+      .selectAll('.slider-g')
+      .data([null])
+      .join('g')
+      .attr('class', 'slider-g')
+      .attr('transform', 'translate(90,30)');
+
+  gRange.call(sliderRange);
+
+
   }
 
   render() {
     return (
       <div className="child1">
-        <svg id="mysvg"><g></g></svg>
+        <svg id="mysvg2"><g></g></svg>
+        <svg className="slider-range"></svg>
       </div>
     );
   }

@@ -66,7 +66,7 @@ class Visualization1 extends Component {
                                    .select("g")
                                    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
- 
+    svg.selectAll("*").remove();
 
     svg.selectAll('.x.axis').data([null]).join('g').attr('class', 'x axis')
        .attr("transform", `translate(0, ${height})`)
@@ -145,8 +145,12 @@ class Visualization1 extends Component {
   render(){
     return (
       <div className="child1">
-        <svg id="mysvg"><g></g></svg>
-        <svg id="legend"><g></g></svg>
+        <svg id="mysvg">
+          <g></g>
+        </svg>
+        <svg id="legend">
+          <g></g>
+        </svg>
       </div>
     );
   };

@@ -18,10 +18,15 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <div className="grand-parent">
         <FileUpload set_data={this.set_data}></FileUpload>
         <div className="parent">
-          <Visualization1 csv_data={this.state.data}></Visualization1>
+          <div className="visualization">
+          <Visualization1  csv_data={this.state.data}></Visualization1>
+          </div>
+          <div className="visualization">
+          <Visual3 csv_data={this.state.data}></Visual3>
+          </div>
         </div>
       </div>
     );
