@@ -46,9 +46,9 @@ class Visualization1 extends Component {
     if (!data) return 0;
     //console.log(data);
 
-    const svgWidth = 500, svgHeight = 400;
+    const svgWidth = 400, svgHeight = 400;
     const margin = { top: 50, right: 30, bottom: 50, left: 60 },
-          width = 500 - margin.left - margin.right,
+          width = 400 - margin.left - margin.right,
           height = 400 - margin.top - margin.bottom;
     
 

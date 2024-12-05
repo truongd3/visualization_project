@@ -2,12 +2,14 @@ import React, { Component } from "react";
 import * as d3 from "d3";
 import calculateAverageInvestedAmountByAge from "./calculateAverageInvestedAmountByAge";
 import { sliderBottom } from "d3-simple-slider";
+import './Visual3.css';
 
 class Visual3 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
+      data: this.props.csv_data,
+      filtered_data: [],
     };
   }
 
@@ -18,13 +20,13 @@ class Visual3 extends Component {
   }
 
   createLineChart() {
-    const data = calculateAverageInvestedAmountByAge(this.props.csv_data);
+    var data = this.state.filtered_data.length == 0 ? calculateAverageInvestedAmountByAge(this.state.data) : calculateAverageInvestedAmountByAge(this.state.filtered_data);
     if (!data) return 0;
     console.log(data);
 
-    const svgWidth = 500, svgHeight = 400;
+    const svgWidth = 400, svgHeight = 400;
     const margin = { top: 50, right: 30, bottom: 50, left: 60 },
-          width = 500 - margin.left - margin.right,
+          width = 400 - margin.left - margin.right,
           height = 400 - margin.top - margin.bottom;
 
     const xScale = d3.scaleLinear().domain(d3.extent(data, d => d.age)).range([0, width]);
@@ -75,23 +77,23 @@ class Visual3 extends Component {
     const sliderRange = sliderBottom()
       .min(d3.min(data, d => d.age))
       .max(d3.max(data, d => d.age))
-      .width(200)
+      .width(250)
       .ticks(3)
       .default([d3.min(data, d => d.age), d3.max(data, d => d.age)])
       .fill('#85bb65')
       .on('onchange', val => {
-          const f_data = this.state.original_data.filter(d => d.age >= val[0] && d.age <= val[1]);
+          const f_data = this.state.data.filter(d => d.age >= val[0] && d.age <= val[1]);
           this.setState({ filtered_data: f_data });
       });
 
     const gRange = d3.select('.slider-range')
-      .attr('width', 200)
+      .attr('width', 250)
       .attr('height', 100)
       .selectAll('.slider-g')
       .data([null])
       .join('g')
       .attr('class', 'slider-g')
-      .attr('transform', 'translate(90,30)');
+      .attr('transform', 'translate(0,30)');
 
   gRange.call(sliderRange);
 
