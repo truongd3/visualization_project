@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import * as d3 from "d3";
-import calculateAverageInvestedAmountByAge from "./calculateAverageInvestedAmountByAge";
+import calculateAverageInterestRateByAge from "./calculateAverageInterestRateByAge";
 import { sliderBottom } from "d3-simple-slider";
 import './Visual3.css';
 
@@ -20,7 +20,7 @@ class Visual3 extends Component {
   }
 
   createLineChart() {
-    var data = this.state.filtered_data.length == 0 ? calculateAverageInvestedAmountByAge(this.state.data) : calculateAverageInvestedAmountByAge(this.state.filtered_data);
+    var data = this.state.filtered_data.length == 0 ? calculateAverageInterestRateByAge(this.state.data) : calculateAverageInterestRateByAge(this.state.filtered_data);
     if (!data) return 0;
     console.log(data);
 
@@ -30,10 +30,10 @@ class Visual3 extends Component {
           height = 400 - margin.top - margin.bottom;
 
     const xScale = d3.scaleLinear().domain(d3.extent(data, d => d.age)).range([0, width]);
-    const yScale = d3.scaleLinear().domain([d3.min(data, d => d.average_amount_invested) - 100, d3.max(data, d => d.average_amount_invested)+100]).range([height, 0]);
+    const yScale = d3.scaleLinear().domain([d3.min(data, d => d.average_interest_rate) - 1, d3.max(data, d => d.average_interest_rate)+1]).range([height, 0]);
 
     const lineGenerator = d3.line().x(d => xScale(d.age))
-                                   .y(d => yScale(d.average_amount_invested))
+                                   .y(d => yScale(d.average_interest_rate))
                                    .curve(d3.curveCardinal);
     var pathData = lineGenerator(data);
 
@@ -65,12 +65,12 @@ class Visual3 extends Component {
        .attr("y", -40)
        .attr("transform", "rotate(-90)")
        .attr("text-anchor", "middle")
-       .text("Average Amount Invested Monthly").style("font-size", "16px").style("fill", "black").style("font-weight", "bold");
+       .text("Average Interest Rate").style("font-size", "16px").style("fill", "black").style("font-weight", "bold");
 
     // Add circles at data points
     svg.selectAll(".circle").data(data).enter().append("circle")
               .attr("cx", d => xScale(d.age))
-              .attr("cy", d => yScale(d.average_amount_invested))
+              .attr("cy", d => yScale(d.average_interest_rate))
               .attr("r", 3)
               .attr("fill", "#ea4335");
 
