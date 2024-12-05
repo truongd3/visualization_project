@@ -42,14 +42,12 @@ class Visual3 extends Component {
                                    .attr("transform", `translate(${margin.left}, ${margin.top})`);
     svg.selectAll("*").remove();
 
-    // Add the line path
     svg.selectAll("path").data([pathData]).join("path")
        .attr("fill", "none")
        .attr("stroke", "#f28b82")
        .attr("stroke-width", 3)
        .attr("d", myd => myd);
 
-    // X-axis
     svg.selectAll('.x.axis').data([null]).join('g').attr('class', 'x axis')
        .attr("transform", `translate(0, ${height})`)
        .call(d3.axisBottom(xScale).ticks(10).tickFormat(d3.format("d")))
@@ -57,7 +55,7 @@ class Visual3 extends Component {
        .attr("x", width / 2)
        .attr("y", 40)
        .text("Age").style("font-size", "16px").style("fill", "black").style("font-weight", "bold");
-    // Y-axis
+
     svg.selectAll('.y.axis').data([null]).join('g').attr('class', 'y axis')
        .call(d3.axisLeft(yScale))
        .append("text")
@@ -67,7 +65,6 @@ class Visual3 extends Component {
        .attr("text-anchor", "middle")
        .text("Average Interest Rate").style("font-size", "16px").style("fill", "black").style("font-weight", "bold");
 
-    // Add circles at data points
     svg.selectAll(".circle").data(data).enter().append("circle")
               .attr("cx", d => xScale(d.age))
               .attr("cy", d => yScale(d.average_interest_rate))
@@ -95,9 +92,8 @@ class Visual3 extends Component {
       .attr('class', 'slider-g')
       .attr('transform', 'translate(0,30)');
 
-  gRange.call(sliderRange);
-
-
+    gRange.call(sliderRange);
+    
   }
 
   render() {
