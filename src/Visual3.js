@@ -9,20 +9,29 @@ class Visual3 extends Component {
     super(props);
     this.state = {
       data: this.props.csv_data,
-      filtered_data: [],
+      filtered_data:[],
     };
   }
 
   componentDidMount() {
+   // this.createLineChart();
   }
+
   componentDidUpdate() {
     this.createLineChart();
   }
 
   createLineChart() {
-    var data = this.state.filtered_data.length == 0 ? calculateAverageInterestRateByAge(this.state.data) : calculateAverageInterestRateByAge(this.state.filtered_data);
-    if (!data) return 0;
-    console.log(data);
+    var oldData = this.props.csv_data;
+    var data = [];
+    if (this.state.filtered_data.length == 0){
+      data = calculateAverageInterestRateByAge(oldData);
+    }
+    else{
+      data = calculateAverageInterestRateByAge(this.state.filtered_data);
+    }
+
+    console.log(this.state.filtered_data);
 
     const svgWidth = 400, svgHeight = 400;
     const margin = { top: 50, right: 30, bottom: 50, left: 60 },
@@ -79,7 +88,8 @@ class Visual3 extends Component {
       .default([d3.min(data, d => d.age), d3.max(data, d => d.age)])
       .fill('#85bb65')
       .on('onchange', val => {
-          const f_data = this.state.data.filter(d => d.age >= val[0] && d.age <= val[1]);
+          var f_data = oldData.filter(d => d.age >= val[0] && d.age <= val[1]);
+          console.log('f_data:',f_data);
           this.setState({ filtered_data: f_data });
       });
 
