@@ -30,7 +30,7 @@ class Visual3 extends Component {
           height = 400 - margin.top - margin.bottom;
 
     const xScale = d3.scaleLinear().domain(d3.extent(data, d => d.age)).range([0, width]);
-    const yScale = d3.scaleLinear().domain([d3.min(data, d => d.average_amount_invested) - 10, d3.max(data, d => d.average_amount_invested)]).range([height, 0]);
+    const yScale = d3.scaleLinear().domain([d3.min(data, d => d.average_amount_invested) - 100, d3.max(data, d => d.average_amount_invested)+100]).range([height, 0]);
 
     const lineGenerator = d3.line().x(d => xScale(d.age))
                                    .y(d => yScale(d.average_amount_invested))
