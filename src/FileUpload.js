@@ -63,9 +63,13 @@ class FileUpload extends Component {
       result.push(parsedObj);
     }
     //result.sort((a, b) => a.age - b.age);
-    console.log(result);
+    //console.log(result);
     return result;
   };
+
+  componentDidUpdate(){
+
+  }
   
 
   render() {

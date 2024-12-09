@@ -53,7 +53,7 @@ class Visualization1 extends Component {
     
 
     const newData = calculateAverages(data);
-    console.log(newData);
+    //console.log(newData);
 
     const xScale = d3.scaleBand().domain(["Low","Average","High"]).range([0,width]).padding(0.2);
     const debtAvg = d3.max(newData, d => d.average_outstanding_debt);
