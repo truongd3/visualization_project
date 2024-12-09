@@ -24,7 +24,7 @@ class Visual3 extends Component {
   createLineChart() {
     var oldData = this.props.csv_data;
     var data = [];
-    if (this.state.filtered_data.length == 0){
+    if (this.state.filtered_data.length === 0){
       data = calculateAverageInterestRateByAge(oldData);
     }
     else{

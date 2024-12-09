@@ -57,7 +57,7 @@ class FileUpload extends Component {
         payment_of_min_amount: obj['payment_of_min_amount'],
         amount_invested_monthly: parseFloat(obj['amount_invested_monthly']),
         monthly_balance: parseFloat(obj['monthly_balance']),
-        credit_score: parseInt(obj['credit_score']) == 0 ? 'Low' : (parseInt(obj['credit_score']) == 1 ? 'Average' : 'High'),
+        credit_score: parseInt(obj['credit_score']) === 0 ? 'Low' : (parseInt(obj['credit_score']) === 1 ? 'Average' : 'High'),
       };
   
       result.push(parsedObj);
@@ -74,12 +74,17 @@ class FileUpload extends Component {
 
   render() {
     return (
-      <div style={{ backgroundColor: "#f0f0f0", padding: 20 }}>
+      <div className="upload" style={{ backgroundColor: "#f0f0f0", padding: 20, height: 100}}>
+        <div>
         <h2>Upload a CSV File</h2>
         <form onSubmit={this.handleFileSubmit}>
           <input type="file" accept=".csv" onChange={(event) => this.setState({ file: event.target.files[0] })} />
           <button type="submit">Upload</button>
         </form>
+        </div>
+        <svg className='mySvg'>
+
+        </svg>
       </div>
     );
   }
