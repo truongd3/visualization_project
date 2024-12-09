@@ -75,7 +75,8 @@ class Visualization1 extends Component {
        .attr("x", width / 2)
        .attr("y", 40)
        .text("Credit Score Group").style("fill", "black")
-       .attr('font-weight','bold');
+       .attr('font-weight','bold')
+       .attr('font-size', 14);
 
     svg.selectAll('.y.axis').data([null]).join('g').attr('class', 'y axis')
        .call(d3.axisLeft(yScale))
@@ -85,7 +86,8 @@ class Visualization1 extends Component {
        .attr("transform", "rotate(-90)")
        .attr("text-anchor", "middle")
        .text("Amount in USD").style("fill", "black")
-       .attr('font-weight','bold');
+       .attr('font-weight','bold')
+       .style("font-size", "14px");
 
 
        svg.selectAll('debt')

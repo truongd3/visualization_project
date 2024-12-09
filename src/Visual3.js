@@ -63,7 +63,7 @@ class Visual3 extends Component {
        .append("text")
        .attr("x", width / 2)
        .attr("y", 40)
-       .text("Age").style("font-size", "16px").style("fill", "black").style("font-weight", "bold");
+       .text("Age").style("font-size", "14px").style("fill", "black").style("font-weight", "bold");
 
     svg.selectAll('.y.axis').data([null]).join('g').attr('class', 'y axis')
        .call(d3.axisLeft(yScale))
@@ -72,7 +72,7 @@ class Visual3 extends Component {
        .attr("y", -40)
        .attr("transform", "rotate(-90)")
        .attr("text-anchor", "middle")
-       .text("Average Interest Rate").style("font-size", "16px").style("fill", "black").style("font-weight", "bold");
+       .text("Average Interest Rate").style("font-size", "14px").style("fill", "black").style("font-weight", "bold");
 
     svg.selectAll(".circle").data(data).enter().append("circle")
               .attr("cx", d => xScale(d.age))
