@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as d3 from 'd3';
 
 class FileUpload extends Component {
   constructor(props) {
@@ -62,6 +63,19 @@ class FileUpload extends Component {
   
       result.push(parsedObj);
     }
+    var svg = d3.select('.mySvg');
+    const keys = Object.keys(result[0]);
+    console.log(keys)
+
+    svg.selectAll('rect')
+    .data(keys)
+    .join('rect')
+    .attr('width',40)
+    .attr('height', 40)
+    .attr('fill', 'darkgray')
+    .attr('y', 50)
+    .attr('x', (d,i)=> i*50)
+
     //result.sort((a, b) => a.age - b.age);
     //console.log(result);
     return result;
@@ -74,7 +88,7 @@ class FileUpload extends Component {
 
   render() {
     return (
-      <div className="upload" style={{ backgroundColor: "#f0f0f0", padding: 20, height: 100}}>
+      <div className="upload" style={{ backgroundColor: "#f0f0f0", padding: 20, height: 100, display: 'flex', gap: 100}}>
         <div>
         <h2>Upload a CSV File</h2>
         <form onSubmit={this.handleFileSubmit}>
@@ -82,7 +96,8 @@ class FileUpload extends Component {
           <button type="submit">Upload</button>
         </form>
         </div>
-        <svg className='mySvg'>
+        <h2>Attributes: </h2>
+        <svg className='mySvg' style={{width: 700}}>
 
         </svg>
       </div>
