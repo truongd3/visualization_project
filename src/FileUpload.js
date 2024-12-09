@@ -70,11 +70,21 @@ class FileUpload extends Component {
     svg.selectAll('rect')
     .data(keys)
     .join('rect')
-    .attr('width',40)
+    .attr('width',70)
     .attr('height', 40)
     .attr('fill', 'darkgray')
     .attr('y', 50)
-    .attr('x', (d,i)=> i*50)
+    .attr('x', (d,i)=> i*80)
+    
+    svg.selectAll('text')
+    .data(keys)
+    .join('text')
+    .attr('x', (d,i)=>35+80*i)
+    .attr('y',75)
+    .attr('text-anchor', 'middle')
+    .text(d=>d)
+    .attr('font-size', 8)
+    .attr('font-weight','bold')
 
     //result.sort((a, b) => a.age - b.age);
     //console.log(result);
@@ -88,7 +98,7 @@ class FileUpload extends Component {
 
   render() {
     return (
-      <div className="upload" style={{ backgroundColor: "#f0f0f0", padding: 20, height: 100, display: 'flex', gap: 100}}>
+      <div className="upload" style={{ backgroundColor: "#f0f0f0", padding: 20, height: 100, display: 'flex', gap: 50}}>
         <div>
         <h2>Upload a CSV File</h2>
         <form onSubmit={this.handleFileSubmit}>
@@ -97,7 +107,7 @@ class FileUpload extends Component {
         </form>
         </div>
         <h2>Attributes: </h2>
-        <svg className='mySvg' style={{width: 700}}>
+        <svg className='mySvg' style={{width: 1200}}>
 
         </svg>
       </div>
