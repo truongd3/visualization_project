@@ -80,10 +80,21 @@ class Visual3 extends Component {
               .attr("r", 3)
               .attr("fill", "#ea4335");
 
+  svg.selectAll('title')
+  .data(['Title'])
+  .join('text')
+  .attr('class','title')
+  .attr('x',svgWidth/2 - margin.left/2)
+  .attr('y',-20)
+  .text('Age vs. Interest Rate')
+  .attr('font-size',18)
+  .attr('font-weight','bold')
+  .attr('text-anchor','middle');
+
     const sliderRange = sliderBottom()
       .min(d3.min(data, d => d.age))
       .max(d3.max(data, d => d.age))
-      .width(250)
+      .width(200)
       .ticks(3)
       .default([d3.min(data, d => d.age), d3.max(data, d => d.age)])
       .fill('#85bb65')
@@ -100,7 +111,7 @@ class Visual3 extends Component {
       .data([null])
       .join('g')
       .attr('class', 'slider-g')
-      .attr('transform', 'translate(0,30)');
+      .attr('transform', 'translate(20,30)');
 
     gRange.call(sliderRange);
     
