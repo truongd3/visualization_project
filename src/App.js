@@ -22,15 +22,17 @@ class App extends Component {
       <div className="grand-parent" style={{display: "flex", flexDirection:"column"}}>
         <FileUpload set_data={this.set_data}></FileUpload>
         <div className="parent" style={{display: "flex", flexDirection:"column"}}>
-          <div className="row1" style={{display:"flex", flexDirection:"row", flex: 1, justifyContent:"space-around", alignContent:"center"}}>
-            <div className="visualization" style={{display:"flex", flex:1}}>
+          <div className="row1" style={{display:"flex", flexDirection:"row", flex: 1, justifyContent:"center", alignItems:"center"}}>
+            <div className="visualization" style={{display:"flex", flex:1, justifyContent:"center", alignItems:"center"}}>
               <Visualization1  csv_data={this.state.data}></Visualization1>
             </div>
-            <div className="visualization" style={{display:"flex", flex:1}}>
+            <div className="visualization" style={{display:"flex", flex:1, justifyContent:"center", alignItems:"center"}}>
               <Visual3 csv_data={this.state.data}></Visual3>
             </div>
           </div>
-          <Visual2 csv_data={this.state.data}></Visual2>
+            <div className="row2" style={{display:"flex", flexDirection:"row", flex: 1, justifyContent:"center", alignItems:"center"}}>
+              <Visual2 csv_data={this.state.data}></Visual2>
+            </div>
         </div>
       </div>
     );

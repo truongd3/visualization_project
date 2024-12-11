@@ -5,7 +5,7 @@ class Visual2 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
+        yAxis: 'count',
     };
   }
 
@@ -28,7 +28,7 @@ class Visual2 extends Component {
     // Normalize the data
     const normalizedData = data.map(d => ({
       credit_mix: d.credit_mix ? d.credit_mix.trim() : null,
-      credit_score: d.credit_score ? d.credit_score : null,
+      credit_score: d.credit_score ? d.credit_score : null, //credit_score: d.credit_score ? d.credit_score : null,
     }));
 
     console.log(normalizedData)
@@ -51,9 +51,7 @@ const scoreMap = {
     // Initialize the counts array for Bad, Standard, Good
     const counts = filtered.reduce((acc, curr) => {
       const scoreIndex = scoreMap[curr.credit_score]; // Map the credit score to an index
-      //console.log(curr)
-      //console.log('currcreditscore',curr.credit_score)
-      //console.log(scoreIndex)
+
       if (scoreIndex !== undefined) {
         acc[scoreIndex] += 1;
       }
@@ -61,13 +59,23 @@ const scoreMap = {
     }, [0, 0, 0]);  // [Bad, Standard, Good]
   
     const total = counts.reduce((sum, count) => sum + count, 0);
-  
-    return {
-      credit_mix: credit_mix,
-      Low: total ? (counts[0] / total) * 100 : 0,
-      Average: total ? (counts[1] / total) * 100 : 0,
-      High: total ? (counts[2] / total) * 100 : 0,
-    };
+    
+    if (this.state.yAxis === 'count'){
+        return {
+        credit_mix: credit_mix,
+        Low: total ? (counts[0] / total) * 100 : 0,
+        Average: total ? (counts[1] / total) * 100 : 0,
+        High: total ? (counts[2] / total) * 100 : 0,
+        };
+    }
+    else{
+        return {
+            credit_mix: credit_mix,
+            Low: d3.mean(data.filter(d => d.credit_score === "Low"), d => d[this.state.yAxis]),
+            Average: d3.mean(data.filter(d => d.credit_score === "Average"), d => d[this.state.yAxis]),
+            High: d3.mean(data.filter(d => d.credit_score === "High"), d => d[this.state.yAxis]),
+            };
+    }
   });
   
 
@@ -147,12 +155,54 @@ const scoreMap = {
         .attr("y", index * 20 + 12)
         .text(score);
     });
+
+    const radioKeys = [
+        {name: 'Annual Income', value: 'annual_income'},
+        {name: 'Age of Credit History', value: 'credit_history_age'},
+        {name: 'Number of Bank Accounts', value: 'num_bank_accounts'},
+        {name: 'Number of Loans', value: 'num_of_loan'},
+        {name: 'Delay from Due Date', value: 'delay_from_due_date'},
+        {name: 'Number of Delayed Payments', value: 'num_of_delayed_payments'},
+    ]
+
+    d3.select('.radio-buttons')
+    .style('display', 'flex')
+    .style('flex-direction', 'column')
+    .style('justify-content', 'center')
+    .style('align-items', 'center');
+
+  }
+
+  handleRadioClick(event){
+    this.setState({
+
+    })
   }
 
   render() {
     return (
-      <div>
-        <svg id="stacked-bar-chart"><g></g></svg>
+      <div style={{display:"flex", flexDirection:"row"}}>
+            <svg id="stacked-bar-chart"><g></g></svg>
+        <div className="radio-buttons" style={{display:"none"}}>
+            <div style={{paddingTop:10}}>
+                <input type="radio" value='annual_income' name="y-axis" onClick={this.handleRadioClick}/>Annual Income
+            </div>
+            <div style={{paddingTop:10}}>
+                <input type="radio" value='credit_history_age' name="y-axis" onClick={this.handleRadioClick}/>Age of Credit History
+            </div>
+            <div style={{paddingTop:10}}>
+                <input type="radio" value='num_bank_accounts' name="y-axis" onClick={this.handleRadioClick}/>Number of Bank Accounts
+            </div>
+            <div style={{paddingTop:10}}>
+                <input type="radio" value='num_of_loan' name="y-axis" onClick={this.handleRadioClick}/>Number of Loans
+            </div>
+            <div style={{paddingTop:10}}>
+                <input type="radio" value='delay_from_due_date' name="y-axis" onClick={this.handleRadioClick}/>Delay from Due Date
+            </div>
+            <div style={{paddingTop:10}}>
+                <input type="radio" value={'num_of_delayed_payments'} name="y-axis" onClick={this.handleRadioClick}/>Number of Delayed Payments
+            </div>
+        </div>
       </div>
     );
   }
