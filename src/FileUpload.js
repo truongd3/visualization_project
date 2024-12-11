@@ -65,7 +65,7 @@ class FileUpload extends Component {
     }
     var svg = d3.select('.mySvg');
     const keys = Object.keys(result[0]);
-    //console.log(keys)
+
 
     const tooltip = d3.select('body').append('div') //here
     .attr('class', 'tooltip')
@@ -78,9 +78,9 @@ class FileUpload extends Component {
     .style('pointer-events', 'none');
 
     var categoricalKeys = keys.filter(d=>(d === "payment_of_min_amount" || d === "credit_mix" || d === "credit_score"));
-    console.log('cat',categoricalKeys);
+
     var quantitativeKeys = keys.filter(d=>(d !== "payment_of_min_amount" && d !== "credit_mix" && d !== "credit_score"));
-    console.log('q',quantitativeKeys);
+
 
     svg.selectAll('catRect')
     .data(categoricalKeys)
@@ -172,8 +172,6 @@ class FileUpload extends Component {
     .attr('font-size', 8)
     .attr('font-weight','bold');
 
-    //result.sort((a, b) => a.age - b.age);
-    //console.log(result);
     return result;
   };
 

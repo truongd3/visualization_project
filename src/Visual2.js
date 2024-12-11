@@ -10,7 +10,6 @@ class Visual2 extends Component {
   }
 
   handleRadioClick = (event) => {
-    //console.log(event.target.value)
     this.setState({
         yAxis: event.target.value,
     })
@@ -30,15 +29,14 @@ class Visual2 extends Component {
       return;
     }
 
-    //console.log(data)
 
     // Normalize the data
     const normalizedData = data.map(d => ({
       credit_mix: d.credit_mix ? d.credit_mix.trim() : null,
       credit_score: d.credit_score ? d.credit_score : null, //credit_score: d.credit_score ? d.credit_score : null,
+      
     }));
 
-    //console.log(normalizedData)
 
     // Credit mix categories and scores
     const creditMixes = ["Bad", "Standard", "Good"];
@@ -79,19 +77,18 @@ const scoreMap = {
         };
     }
     else{
-        console.log({
-            credit_mix: credit_mix,
-            Low: d3.mean(data.filter(d => d.credit_score === "Low"), d => parseFloat(d[this.state.yAxis])),
-            Average: d3.mean(data.filter(d => d.credit_score === "Average"), d => d[this.state.yAxis]),
-            High: d3.mean(data.filter(d => d.credit_score === "High"), d => d[this.state.yAxis]),
-            }
-        )
+        var lowData = normalizedData.filter(d => d.credit_score === "Low");
+        var avgData = normalizedData.filter(d => d.credit_score === "Average");
+        var highData = normalizedData.filter(d => d.credit_score === "High");
+
+        console.log(d3.mean(lowData, d=> d[this.state.yAxis]));
         return {
             credit_mix: credit_mix,
-            Low: d3.mean(data.filter(d => d.credit_score === "Low"), d => parseFloat(d[this.state.yAxis])),
-            Average: d3.mean(data.filter(d => d.credit_score === "Average"), d => parseFloat(d[this.state.yAxis])),
-            High: d3.mean(data.filter(d => d.credit_score === "High"), d => parseFloat(d[this.state.yAxis])),
-            };
+            Low: d3.mean(lowData[this.state.yAxis]),
+            Average: d3.mean(avgData[this.state.yAxis]),
+            High: d3.mean(highData[this.state.yAxis]),
+        };
+        
     }
   });
   
@@ -130,10 +127,7 @@ const scoreMap = {
     // Stack data based on credit scores
     const stackGen = d3.stack().keys(["Low", "Average", "High"]);
     const stackedSeries = stackGen(groupedData);
-    console.log(groupedData);
-
-    console.log('grouped data',groupedData)
-
+    
     // Render stacked bars
     chart.selectAll(".layer")
       .data(stackedSeries)
