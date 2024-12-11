@@ -9,6 +9,13 @@ class Visual2 extends Component {
     };
   }
 
+  handleRadioClick = (event) => {
+    //console.log(event.target.value)
+    this.setState({
+        yAxis: event.target.value,
+    })
+  };
+
   componentDidMount() {
     this.createChart();
   }
@@ -31,11 +38,11 @@ class Visual2 extends Component {
       credit_score: d.credit_score ? d.credit_score : null, //credit_score: d.credit_score ? d.credit_score : null,
     }));
 
-    console.log(normalizedData)
+    //console.log(normalizedData)
 
     // Credit mix categories and scores
     const creditMixes = ["Bad", "Standard", "Good"];
-    const creditScores = ["Low", "Average", "High"];
+    const creditScores = ["High", "Average", "Low"];
 
 // Assuming credit_score values are "Bad", "Standard", and "Good"
 const scoreMap = {
@@ -44,6 +51,9 @@ const scoreMap = {
     'High': 2
   };
   
+
+  var maxValue = d3.mean(data, d => parseFloat(d[this.state.yAxis])) * 4;
+
   // Group data by credit mix
   const groupedData = creditMixes.map((credit_mix) => {
     const filtered = normalizedData.filter(d => d.credit_mix === credit_mix);
@@ -69,11 +79,18 @@ const scoreMap = {
         };
     }
     else{
-        return {
+        console.log({
             credit_mix: credit_mix,
-            Low: d3.mean(data.filter(d => d.credit_score === "Low"), d => d[this.state.yAxis]),
+            Low: d3.mean(data.filter(d => d.credit_score === "Low"), d => parseFloat(d[this.state.yAxis])),
             Average: d3.mean(data.filter(d => d.credit_score === "Average"), d => d[this.state.yAxis]),
             High: d3.mean(data.filter(d => d.credit_score === "High"), d => d[this.state.yAxis]),
+            }
+        )
+        return {
+            credit_mix: credit_mix,
+            Low: d3.mean(data.filter(d => d.credit_score === "Low"), d => parseFloat(d[this.state.yAxis])),
+            Average: d3.mean(data.filter(d => d.credit_score === "Average"), d => parseFloat(d[this.state.yAxis])),
+            High: d3.mean(data.filter(d => d.credit_score === "High"), d => parseFloat(d[this.state.yAxis])),
             };
     }
   });
@@ -102,17 +119,18 @@ const scoreMap = {
       .padding(0.2);
 
     const yScale = d3.scaleLinear()
-      .domain([0, 100])
+      .domain(this.state.yAxis === 'count' ? [0, 100] : [0, maxValue])
       .range([height, 0]);
 
     // Color scale for the credit scores
     const colorScale = d3.scaleOrdinal()
       .domain(creditScores)
-      .range(["red", "orange", "green"]);
+      .range(["green", "orange", "red"]);
 
     // Stack data based on credit scores
     const stackGen = d3.stack().keys(["Low", "Average", "High"]);
     const stackedSeries = stackGen(groupedData);
+    console.log(groupedData);
 
     console.log('grouped data',groupedData)
 
@@ -162,7 +180,7 @@ const scoreMap = {
         {name: 'Number of Bank Accounts', value: 'num_bank_accounts'},
         {name: 'Number of Loans', value: 'num_of_loan'},
         {name: 'Delay from Due Date', value: 'delay_from_due_date'},
-        {name: 'Number of Delayed Payments', value: 'num_of_delayed_payments'},
+        {name: 'Number of Delayed Payments', value: 'num_of_delayed_payment'},
     ]
 
     d3.select('.radio-buttons')
@@ -171,12 +189,6 @@ const scoreMap = {
     .style('justify-content', 'center')
     .style('align-items', 'center');
 
-  }
-
-  handleRadioClick(event){
-    this.setState({
-
-    })
   }
 
   render() {
