@@ -18,14 +18,16 @@ class App extends Component {
 
   render() {
     return (
-      <div className="grand-parent">
+      <div className="grand-parent" style={{display: "flex", flexDirection:"column"}}>
         <FileUpload set_data={this.set_data}></FileUpload>
-        <div className="parent">
-          <div className="visualization">
-          <Visualization1  csv_data={this.state.data}></Visualization1>
-          </div>
-          <div className="visualization">
-          <Visual3 csv_data={this.state.data}></Visual3>
+        <div className="parent" style={{display: "flex"}}>
+          <div className="row1" style={{display:"flex", flexDirection:"row", flex: 1, justifyContent:"space-around", alignContent:"center"}}>
+            <div className="visualization" style={{display:"flex", flex:1}}>
+              <Visualization1  csv_data={this.state.data}></Visualization1>
+            </div>
+            <div className="visualization" style={{display:"flex", flex:1}}>
+              <Visual3 csv_data={this.state.data}></Visual3>
+            </div>
           </div>
         </div>
       </div>
