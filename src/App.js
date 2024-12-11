@@ -3,6 +3,7 @@ import "./App.css";
 import FileUpload from "./FileUpload";
 import Visual3 from "./Visual3";
 import Visualization1 from "./Visualization1";
+import Visual2 from "./Visual2";
 
 class App extends Component {
   constructor(props) {
@@ -20,7 +21,7 @@ class App extends Component {
     return (
       <div className="grand-parent" style={{display: "flex", flexDirection:"column"}}>
         <FileUpload set_data={this.set_data}></FileUpload>
-        <div className="parent" style={{display: "flex"}}>
+        <div className="parent" style={{display: "flex", flexDirection:"column"}}>
           <div className="row1" style={{display:"flex", flexDirection:"row", flex: 1, justifyContent:"space-around", alignContent:"center"}}>
             <div className="visualization" style={{display:"flex", flex:1}}>
               <Visualization1  csv_data={this.state.data}></Visualization1>
@@ -29,6 +30,7 @@ class App extends Component {
               <Visual3 csv_data={this.state.data}></Visual3>
             </div>
           </div>
+          <Visual2 csv_data={this.state.data}></Visual2>
         </div>
       </div>
     );

@@ -65,7 +65,7 @@ class FileUpload extends Component {
     }
     var svg = d3.select('.mySvg');
     const keys = Object.keys(result[0]);
-    console.log(keys)
+    //console.log(keys)
 
     const tooltip = d3.select('body').append('div') //here
     .attr('class', 'tooltip')
@@ -77,14 +77,20 @@ class FileUpload extends Component {
     .style('border-radius', '4px')
     .style('pointer-events', 'none');
 
-    svg.selectAll('rect')
-    .data(keys)
+    var categoricalKeys = keys.filter(d=>(d === "payment_of_min_amount" || d === "credit_mix" || d === "credit_score"));
+    console.log('cat',categoricalKeys);
+    var quantitativeKeys = keys.filter(d=>(d !== "payment_of_min_amount" && d !== "credit_mix" && d !== "credit_score"));
+    console.log('q',quantitativeKeys);
+
+    svg.selectAll('catRect')
+    .data(categoricalKeys)
     .join('rect')
-    .attr('width',70)
-    .attr('height', 40)
+    .attr('class', 'catRects')
+    .attr('width',140)
+    .attr('height', 35)
     .attr('fill', 'darkgray')
-    .attr('y', 50)
-    .attr('x', (d,i)=> i*80)
+    .attr('y', 60)
+    .attr('x', (d,i)=> i*150)
     .attr('flex', 1)
     .on('mouseover', function(event, d) {
       tooltip.style('visibility', 'visible').html('');
@@ -101,39 +107,41 @@ class FileUpload extends Component {
       .attr('width',ttWidth + barMargins.left + barMargins.right);
 
       const barContainer = toolTipSVG.join('g').attr("transform", `translate(${barMargins.left},${barMargins.top})`);
-      /*
-      var barXScale = d3.scaleBand().domain(barData.map(d => d.mon)).range([0,ttWidth]).padding(0.15);
-      var barYScale = d3.scaleLinear().domain([0,d3.max(barData, d => d.num)]).range([ttHeight,0]);
-
-      barContainer.selectAll(".bar-x-axis").data([null]).join('g').attr('class',"bar-x-axis")
-        .attr("transform", `translate(${25},${ttHeight+21})`)
-        .call(d3.axisBottom(barXScale)).attr('stroke','black').selectAll("path, line")
-        .style("stroke", "black");
-        
-        
-      barContainer.selectAll(".bar-y-axis").data([null]).join('g').attr('class',"bar-y-axis")
-        .attr("transform", `translate(${25},${20})`)
-        .call(d3.axisLeft(barYScale)).attr('stroke','black').selectAll("path, line")
-        .style("stroke", "black");
-
-
-
-      toolTipSVG.selectAll('rect')
-      .data(barData)
-      .join('rect')
-        .attr('x',d=>barXScale(d.mon))
-        .attr('y',d=>barYScale(d.num))
-        .attr('width', barXScale.bandwidth())
-        .attr('height', d=> ttHeight - barYScale(d.num))
-        .attr("transform", `translate(${25},${20})`)
-        .attr('fill',oldColor)
-        .attr('setting', oldColor = colorsToCompany[d.key])
-        .transition()
-        .duration(500)
-        .attr('fill',colorsToCompany[d.key]);
-        
       
-      */
+    })
+    .on('mousemove', function(event) {
+      tooltip.style('top', (event.pageY + 10) + 'px').style('left', (event.pageX + 10) + 'px');
+    })
+    .on('mouseout', function() {
+      tooltip.style('visibility', 'hidden')
+    });
+
+    svg.selectAll('quaRect')
+    .data(quantitativeKeys)
+    .join('rect')
+    .attr('class', 'quaRects')
+    .attr('width',140)
+    .attr('height', 35)
+    .attr('fill', 'darkgray')
+    .attr('y', 20)
+    .attr('x', (d,i)=> i*150)
+    .attr('flex', 1)
+    .on('mouseover', function(event, d) {
+      tooltip.style('visibility', 'visible').html('');
+      
+      const barMargins = {
+        top: 30, bottom: 30, right: 45, left: 40
+      }
+
+      const ttHeight = 50;
+      const ttWidth = 100;
+
+      var toolTipSVG = tooltip.append('svg').attr('class','tooltip-svg')
+      .attr('height',ttHeight+barMargins.top + barMargins.bottom)
+      .attr('width',ttWidth + barMargins.left + barMargins.right);
+
+      const barContainer = toolTipSVG.join('g').attr("transform", `translate(${barMargins.left},${barMargins.top})`);
+      
     })
     .on('mousemove', function(event) {
       tooltip.style('top', (event.pageY + 10) + 'px').style('left', (event.pageX + 10) + 'px');
@@ -142,15 +150,27 @@ class FileUpload extends Component {
       tooltip.style('visibility', 'hidden')
     });
     
-    svg.selectAll('text')
-    .data(keys)
+    svg.selectAll('catText')
+    .data(categoricalKeys)
     .join('text')
-    .attr('x', (d,i)=>35+80*i)
+    .attr('class', 'catText')
+    .attr('x', (d,i)=>70+150*i)
     .attr('y',75)
     .attr('text-anchor', 'middle')
     .text(d=>d)
     .attr('font-size', 8)
-    .attr('font-weight','bold')
+    .attr('font-weight','bold');
+
+    svg.selectAll('quaText')
+    .data(quantitativeKeys)
+    .join('text')
+    .attr('class', 'quaText')
+    .attr('x', (d,i)=>70+150*i)
+    .attr('y',35)
+    .attr('text-anchor', 'middle')
+    .text(d=>d)
+    .attr('font-size', 8)
+    .attr('font-weight','bold');
 
     //result.sort((a, b) => a.age - b.age);
     //console.log(result);
@@ -172,8 +192,11 @@ class FileUpload extends Component {
           <button type="submit">Upload</button>
         </form>
         </div>
-        <h2>Attributes: </h2>
-        <svg className='mySvg' style={{display:"flex", gap:20, flexDirection:'row', width:960}}>
+        <div>
+          <h2>Quantitative Attributes:</h2>
+          <h2>Categorical Attributes:</h2>
+        </div>
+        <svg className='mySvg' style={{display:"flex", gap:20, flexDirection:'row', width:1600}}>
 
         </svg>
       </div>
