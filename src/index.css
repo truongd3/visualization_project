@@ -7,7 +7,29 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.attribute-title {
+  font-size: 18px;
+  margin-bottom: 0;
+}
+
+.attribute-list-container {
+  display: flex;
+  gap: 5px; /* Space between Attribute components */
+  width: 100%;
+  flex-direction: column;
+}
+
+.svg-container {
+  overflow-x: auto;
+  background: white;
+  border: 1px solid #ccc;
+  width: 75%;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.mySvg1, .mySvg2 {
+  width: max-content;
+  height: 40px;
+  display: block;
 }
