@@ -46,10 +46,10 @@ class Visualization1 extends Component {
     if (!data) return 0;
     //console.log(data);
 
-    const svgWidth = 400, svgHeight = 400;
-    const margin = { top: 50, right: 30, bottom: 50, left: 60 },
-          width = 400 - margin.left - margin.right,
-          height = 400 - margin.top - margin.bottom;
+    const svgWidth = 300, svgHeight = 400;
+    const margin = { top: 50, right: 10, bottom: 50, left: 75 },
+          width = svgWidth - margin.left - margin.right,
+          height = svgHeight - margin.top - margin.bottom;
     
 
     const newData = calculateAverages(data);
@@ -114,14 +114,14 @@ class Visualization1 extends Component {
         .data(['Title'])
         .join('text')
         .attr('class','title')
-        .attr('x',svgWidth/2-margin.left+5)
+        .attr('x',svgWidth/2-margin.left/2)
         .attr('y',-20)
         .text('Credit Score Group vs. Balance & Debt')
-        .attr('font-size',18)
+        .attr('font-size',14)
         .attr('font-weight','bold')
         .attr('text-anchor','middle')
 
-        const legend = d3.select("#legend").attr("width", 300).attr("height", 200).select("g").attr('transform',`translate(-50,0)`)
+        const legend = d3.select("#legend").attr("width", 150).attr("height", 200).select("g").attr('transform',`translate(-50,0)`)
 
       legend.selectAll('legend-rect')
         .data(['Average Monthly Balance', 'Total Outstanding Debt'])
@@ -129,17 +129,17 @@ class Visualization1 extends Component {
         .attr('class', 'legend-item')
         .attr('y', (d,i)=>(200/2 + (i*30)))
         .attr('x', 50)
-        .attr('width', 20)
-        .attr('height', 20)
+        .attr('width', 15)
+        .attr('height', 15)
         .attr('fill', d=>(d==='Average Monthly Balance' ? 'Green' : 'Red'));
 
       legend.selectAll('legend-item')
         .data(['Average Monthly Balance', 'Total Outstanding Debt'])
         .join('text')
-        .attr('x', 80)
-        .attr('y', (d,i)=>(200/2 + (i*30) + 15))
+        .attr('x', 70)
+        .attr('y', (d,i)=>(200/2 + (i*30) )+12)
         .text(d => d)
-        .attr('font-size',14);
+        .attr('font-size',11);
 
   } 
   

@@ -182,7 +182,7 @@ class FileUpload extends Component {
 
   render() {
     return (
-      <div className="upload" style={{ backgroundColor: "#f0f0f0", padding: 20, height: 120, display: 'flex', gap: 50}}>
+      <div className="upload" style={{ backgroundColor: "#f0f0f0", padding: 20, height: 170, display: 'flex', gap: 50}}>
         <div>
         <h2>Upload a CSV File</h2>
         <form onSubmit={this.handleFileSubmit}>

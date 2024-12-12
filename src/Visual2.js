@@ -34,9 +34,22 @@ class Visual2 extends Component {
     const normalizedData = data.map(d => ({
       credit_mix: d.credit_mix ? d.credit_mix.trim() : null,
       credit_score: d.credit_score ? d.credit_score : null, //credit_score: d.credit_score ? d.credit_score : null,
-      
+      annual_income: d.annual_income ? d.annual_income : null,
+      credit_history_age: d.credit_history_age ? d.credit_history_age : null,
+      num_bank_accounts: d.num_bank_accounts ? d.num_bank_accounts : null,
+      num_of_loan: d.num_of_loan ? d.num_of_loan : null,
+      delay_from_due_date: d.delay_from_due_date ? d.delay_from_due_date : null,
+      num_of_delayed_payment: d.num_of_delayed_payment ? d.num_of_delayed_payment : null,
     }));
 
+    /*
+       {name: 'Annual Income', value: 'annual_income'},
+        {name: 'Age of Credit History', value: 'credit_history_age'},
+        {name: 'Number of Bank Accounts', value: 'num_bank_accounts'},
+        {name: 'Number of Loans', value: 'num_of_loan'},
+        {name: 'Delay from Due Date', value: 'delay_from_due_date'},
+        {name: 'Number of Delayed Payments', value: 'num_of_delayed_payment'},
+    */
 
     // Credit mix categories and scores
     const creditMixes = ["Bad", "Standard", "Good"];
@@ -77,16 +90,17 @@ const scoreMap = {
         };
     }
     else{
-        var lowData = normalizedData.filter(d => d.credit_score === "Low");
-        var avgData = normalizedData.filter(d => d.credit_score === "Average");
-        var highData = normalizedData.filter(d => d.credit_score === "High");
+        var lowData = data.filter(d => d.credit_score === "Low");
+        var avgData = data.filter(d => d.credit_score === "Average");
+        var highData = data.filter(d => d.credit_score === "High");
 
-        console.log(d3.mean(lowData, d=> d[this.state.yAxis]));
+        
+        
         return {
-            credit_mix: credit_mix,
-            Low: d3.mean(lowData[this.state.yAxis]),
-            Average: d3.mean(avgData[this.state.yAxis]),
-            High: d3.mean(highData[this.state.yAxis]),
+          credit_mix: credit_mix,
+          Low: d3.mean((lowData[this.state.yAxis]).filter(d=>d.credit_mix===credit_mix)),
+          Average: d3.mean((avgData[this.state.yAxis]).filter(d=>d.credit_mix===credit_mix)),
+          High: d3.mean((highData[this.state.yAxis]).filter(d=>d.credit_mix===credit_mix)),
         };
         
     }
@@ -94,7 +108,7 @@ const scoreMap = {
   
 
     // Set up chart dimensions and margins
-    const svgWidth = 960, svgHeight = 400;
+    const svgWidth = 400, svgHeight = 400;
     const margin = { top: 20, right: 120, bottom: 50, left: 50 };
     const width = svgWidth - margin.left - margin.right;
     const height = svgHeight - margin.top - margin.bottom;

@@ -34,9 +34,9 @@ class Visual3 extends Component {
     //console.log(this.state.filtered_data);
 
     const svgWidth = 400, svgHeight = 400;
-    const margin = { top: 50, right: 30, bottom: 50, left: 60 },
-          width = 400 - margin.left - margin.right,
-          height = 400 - margin.top - margin.bottom;
+    const margin = { top: 100, right: 30, bottom: 50, left: 60 },
+          width = svgWidth - margin.left - margin.right,
+          height = svgHeight - margin.top - margin.bottom;
 
     const xScale = d3.scaleLinear().domain(d3.extent(data, d => d.age)).range([0, width]);
     const yScale = d3.scaleLinear().domain([d3.min(data, d => d.average_interest_rate) - 1, d3.max(data, d => d.average_interest_rate)+1]).range([height, 0]);
@@ -105,13 +105,13 @@ class Visual3 extends Component {
       });
 
     const gRange = d3.select('.slider-range')
-      .attr('width', 250)
+      .attr('width', svgWidth)
       .attr('height', 100)
       .selectAll('.slider-g')
       .data([null])
       .join('g')
       .attr('class', 'slider-g')
-      .attr('transform', 'translate(20,30)');
+      .attr('transform', `translate(${svgWidth/4},30)`);
 
     gRange.call(sliderRange);
     
@@ -119,7 +119,7 @@ class Visual3 extends Component {
 
   render() {
     return (
-      <div className="child1">
+      <div className="child1" style={{display:"flex", flexDirection:"column", justifyContent:"center"}}>
         <svg id="mysvg2"><g></g></svg>
         <svg className="slider-range"></svg>
       </div>
