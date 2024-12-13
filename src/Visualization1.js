@@ -98,7 +98,7 @@ class Visualization1 extends Component {
         .attr('y', d => yScale(d.average_outstanding_debt))
         .attr('width', xScale.bandwidth()/2)
         .attr('height', d => height - yScale(d.average_outstanding_debt))
-        .attr('fill', 'red');
+        .attr('fill', '#984ea3');
   
       svg.selectAll('balance')
         .data(newData)
@@ -108,13 +108,13 @@ class Visualization1 extends Component {
         .attr('y', d => yScale(d.average_monthly_balance))
         .attr('width', xScale.bandwidth()/2)
         .attr('height', d => height - yScale(d.average_monthly_balance))
-        .attr('fill', 'green');        
+        .attr('fill', '#377eb8');        
 
       svg.selectAll('title')
         .data(['Title'])
         .join('text')
         .attr('class','title')
-        .attr('x',svgWidth/2-margin.left/2)
+        .attr('x',svgWidth/2-margin.left)
         .attr('y',-20)
         .text('Credit Score Group vs. Balance & Debt')
         .attr('font-size',14)
@@ -131,10 +131,10 @@ class Visualization1 extends Component {
         .attr('x', 50)
         .attr('width', 15)
         .attr('height', 15)
-        .attr('fill', d=>(d==='Average Monthly Balance' ? 'Green' : 'Red'));
+        .attr('fill', d=>(d==='Average Monthly Balance' ? '#984ea3' : '#377eb8'));
 
       legend.selectAll('legend-item')
-        .data(['Average Monthly Balance', 'Total Outstanding Debt'])
+        .data([ 'Average Outstanding Debt', 'Average Monthly Balance',])
         .join('text')
         .attr('x', 70)
         .attr('y', (d,i)=>(200/2 + (i*30) )+12)

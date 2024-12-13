@@ -10,6 +10,7 @@ class Visual2 extends Component {
   }
 
   handleRadioClick = (event) => {
+    console.log('clicked ',event.target.value);
     this.setState({
         yAxis: event.target.value,
     })
@@ -39,7 +40,8 @@ class Visual2 extends Component {
       num_bank_accounts: d.num_bank_accounts ? d.num_bank_accounts : null,
       num_of_loan: d.num_of_loan ? d.num_of_loan : null,
       delay_from_due_date: d.delay_from_due_date ? d.delay_from_due_date : null,
-      num_of_delayed_payment: d.num_of_delayed_payment ? d.num_of_delayed_payment : null,
+      credit_utilization_ratio: d.credit_utilization_ratio ? d.credit_utilization_ratio : null,
+
     }));
 
     /*
@@ -63,7 +65,7 @@ const scoreMap = {
   };
   
 
-  var maxValue = d3.mean(data, d => parseFloat(d[this.state.yAxis])) * 4;
+
 
   // Group data by credit mix
   const groupedData = creditMixes.map((credit_mix) => {
@@ -72,44 +74,44 @@ const scoreMap = {
     // Initialize the counts array for Bad, Standard, Good
     const counts = filtered.reduce((acc, curr) => {
       const scoreIndex = scoreMap[curr.credit_score]; // Map the credit score to an index
-
+  
       if (scoreIndex !== undefined) {
         acc[scoreIndex] += 1;
       }
       return acc;
-    }, [0, 0, 0]);  // [Bad, Standard, Good]
+    }, [0, 0, 0]); // [Bad, Standard, Good]
   
     const total = counts.reduce((sum, count) => sum + count, 0);
-    
-    if (this.state.yAxis === 'count'){
-        return {
+  
+    if (this.state.yAxis === 'count') {
+      return {
         credit_mix: credit_mix,
         Low: total ? (counts[0] / total) * 100 : 0,
         Average: total ? (counts[1] / total) * 100 : 0,
         High: total ? (counts[2] / total) * 100 : 0,
-        };
-    }
-    else{
-        var lowData = data.filter(d => d.credit_score === "Low");
-        var avgData = data.filter(d => d.credit_score === "Average");
-        var highData = data.filter(d => d.credit_score === "High");
-
-        
-        
-        return {
-          credit_mix: credit_mix,
-          Low: d3.mean((lowData[this.state.yAxis]).filter(d=>d.credit_mix===credit_mix)),
-          Average: d3.mean((avgData[this.state.yAxis]).filter(d=>d.credit_mix===credit_mix)),
-          High: d3.mean((highData[this.state.yAxis]).filter(d=>d.credit_mix===credit_mix)),
-        };
-        
+      };
+    } else {
+      // Filter data based on credit score categories
+      const lowData = filtered.filter(d => d.credit_score === "Low");
+      const avgData = filtered.filter(d => d.credit_score === "Average");
+      const highData = filtered.filter(d => d.credit_score === "High");
+  
+      // Calculate the mean for each category based on the selected yAxis
+      return {
+        credit_mix: credit_mix,
+        Low: d3.mean(lowData, d => d[this.state.yAxis]) || 0,
+        Average: d3.mean(avgData, d => d[this.state.yAxis]) || 0,
+        High: d3.mean(highData, d => d[this.state.yAxis]) || 0,
+      };
     }
   });
+
+  var maxValue = d3.max(groupedData, d => d.Low+d.Average+d.High);
   
 
     // Set up chart dimensions and margins
-    const svgWidth = 400, svgHeight = 400;
-    const margin = { top: 20, right: 120, bottom: 50, left: 50 };
+    const svgWidth = 420, svgHeight = 400;
+    const margin = { top: 60, right: 150, bottom: 60, left: 60 };
     const width = svgWidth - margin.left - margin.right;
     const height = svgHeight - margin.top - margin.bottom;
 
@@ -136,7 +138,7 @@ const scoreMap = {
     // Color scale for the credit scores
     const colorScale = d3.scaleOrdinal()
       .domain(creditScores)
-      .range(["green", "orange", "red"]);
+      .range(["green", "#ff7f00", "#e41a1c"]);
 
     // Stack data based on credit scores
     const stackGen = d3.stack().keys(["Low", "Average", "High"]);
@@ -162,11 +164,11 @@ const scoreMap = {
 
     // Add Y axis (percentage)
     chart.append("g")
-      .call(d3.axisLeft(yScale).ticks(10).tickFormat(d => `${d}%`));
+      .call(d3.axisLeft(yScale).ticks(10).tickFormat( this.state.yAxis === 'count' ? d => `${d}%` : d=>d));
 
     // Add a legend
     const legend = chart.append("g")
-      .attr("transform", `translate(${width + 20}, 0)`);
+      .attr("transform", `translate(${width + 20}, ${height/2-margin.top})`);
 
     creditScores.forEach((score, index) => {
       legend.append("rect")
@@ -179,17 +181,9 @@ const scoreMap = {
       legend.append("text")
         .attr("x", 20)
         .attr("y", index * 20 + 12)
-        .text(score);
+        .text(score+' Credit Score')
+        .attr('font-size', 12);
     });
-
-    const radioKeys = [
-        {name: 'Annual Income', value: 'annual_income'},
-        {name: 'Age of Credit History', value: 'credit_history_age'},
-        {name: 'Number of Bank Accounts', value: 'num_bank_accounts'},
-        {name: 'Number of Loans', value: 'num_of_loan'},
-        {name: 'Delay from Due Date', value: 'delay_from_due_date'},
-        {name: 'Number of Delayed Payments', value: 'num_of_delayed_payment'},
-    ]
 
     d3.select('.radio-buttons')
     .style('display', 'flex')
@@ -197,30 +191,55 @@ const scoreMap = {
     .style('justify-content', 'center')
     .style('align-items', 'center');
 
+    svg.selectAll('title')
+    .data(['Title'])
+    .join('text')
+    .attr('class','title')
+    .attr('x',svgWidth/2-margin.left)
+    .attr('y',30)
+    .text('Credit Score Group vs. Balance & Debt')
+    .attr('font-size',16)
+    .attr('font-weight','bold')
+    .attr('text-anchor','middle')
+
+    svg.selectAll('x-axis-label')
+    .data(['Credit Mix'])
+    .join('text')
+    .attr('class','x-axis-label')
+    .attr('x',svgWidth/2-margin.left/1.3)
+    .attr('y',height+margin.top+margin.bottom/1.5)
+    .text('Credit Mix')
+    .attr('font-size',14)
+    .attr('font-weight','bold')
+    .attr('text-anchor','middle')
+
   }
 
   render() {
     return (
       <div style={{display:"flex", flexDirection:"row"}}>
             <svg id="stacked-bar-chart"><g></g></svg>
-        <div className="radio-buttons" style={{display:"none"}}>
-            <div style={{paddingTop:10}}>
-                <input type="radio" value='annual_income' name="y-axis" onClick={this.handleRadioClick}/>Annual Income
+        <div className="radio-buttons" style={{display:"none", flex:1, marginLeft:30, marginRight:-20}}>
+          <div style={{paddingTop:10}}>
+                <input type="radio" value='count' name="y-axis" onClick={this.handleRadioClick} defaultChecked/>Count (as percentage)
             </div>
             <div style={{paddingTop:10}}>
-                <input type="radio" value='credit_history_age' name="y-axis" onClick={this.handleRadioClick}/>Age of Credit History
+                <input type="radio" value='annual_income' name="y-axis" onClick={this.handleRadioClick}/>Average Annual Income (USD)
             </div>
             <div style={{paddingTop:10}}>
-                <input type="radio" value='num_bank_accounts' name="y-axis" onClick={this.handleRadioClick}/>Number of Bank Accounts
+                <input type="radio" value='credit_history_age' name="y-axis" onClick={this.handleRadioClick}/>Average Age of Credit History (Months)
             </div>
             <div style={{paddingTop:10}}>
-                <input type="radio" value='num_of_loan' name="y-axis" onClick={this.handleRadioClick}/>Number of Loans
+                <input type="radio" value='num_bank_accounts' name="y-axis" onClick={this.handleRadioClick}/>Average Number of Bank Accounts
             </div>
             <div style={{paddingTop:10}}>
-                <input type="radio" value='delay_from_due_date' name="y-axis" onClick={this.handleRadioClick}/>Delay from Due Date
+                <input type="radio" value='num_of_loan' name="y-axis" onClick={this.handleRadioClick}/>Average Number of Loans
             </div>
             <div style={{paddingTop:10}}>
-                <input type="radio" value={'num_of_delayed_payments'} name="y-axis" onClick={this.handleRadioClick}/>Number of Delayed Payments
+                <input type="radio" value='delay_from_due_date' name="y-axis" onClick={this.handleRadioClick}/>Average Delay from Due Date
+            </div>
+            <div style={{paddingTop:10}}>
+                <input type="radio" value={'credit_utilization_ratio'} name="y-axis" onClick={this.handleRadioClick}/>Average Credit Utilization Ratio
             </div>
         </div>
       </div>
