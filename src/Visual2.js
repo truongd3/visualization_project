@@ -65,21 +65,18 @@ const scoreMap = {
   };
   
 
-
-
-  // Group data by credit mix
   const groupedData = creditMixes.map((credit_mix) => {
     const filtered = normalizedData.filter(d => d.credit_mix === credit_mix);
   
-    // Initialize the counts array for Bad, Standard, Good
+
     const counts = filtered.reduce((acc, curr) => {
-      const scoreIndex = scoreMap[curr.credit_score]; // Map the credit score to an index
+      const scoreIndex = scoreMap[curr.credit_score];
   
       if (scoreIndex !== undefined) {
         acc[scoreIndex] += 1;
       }
       return acc;
-    }, [0, 0, 0]); // [Bad, Standard, Good]
+    }, [0, 0, 0]);
   
     const total = counts.reduce((sum, count) => sum + count, 0);
   
@@ -91,12 +88,11 @@ const scoreMap = {
         High: total ? (counts[2] / total) * 100 : 0,
       };
     } else {
-      // Filter data based on credit score categories
+
       const lowData = filtered.filter(d => d.credit_score === "Low");
       const avgData = filtered.filter(d => d.credit_score === "Average");
       const highData = filtered.filter(d => d.credit_score === "High");
   
-      // Calculate the mean for each category based on the selected yAxis
       return {
         credit_mix: credit_mix,
         Low: d3.mean(lowData, d => d[this.state.yAxis]) || 0,
@@ -213,21 +209,44 @@ const scoreMap = {
     .attr('font-weight','bold')
     .attr('text-anchor','middle')
 
+    let yAxisToName = {'count': 'Percentage',
+      'annual_income': 'Annual Income (USD)',
+      'credit_history_age': 'Credit Age (Months)',
+      'num_bank_accounts': 'Number of Bank Accounts',
+      'num_of_loan': 'Number of Loans',
+      'delay_from_due_date': 'Delay from Due Date',
+      'credit_utilization_ratio': 'Credit Utilization Ratio (Percent)'};
+    
+
+    svg.selectAll('y-axis-label')
+    .data([null])
+    .join('text')
+    .attr('class','y-axis-label')
+    .attr('x',0)
+    .attr('y',0)
+    .text(yAxisToName[this.state.yAxis])
+    .attr('font-size',14)
+    .attr('font-weight','bold')
+    .attr('text-anchor','middle')
+    .attr('transform', `rotate(-90)`)
+    .attr('dy', 10)
+    .attr('dx', -height/2-margin.top)
+
   }
 
   render() {
     return (
       <div style={{display:"flex", flexDirection:"row"}}>
             <svg id="stacked-bar-chart"><g></g></svg>
-        <div className="radio-buttons" style={{display:"none", flex:1, marginLeft:30, marginRight:-20}}>
+        <div className="radio-buttons" style={{display:"none", flex:1, marginLeft:10, marginRight:-20, fontSize:11}}>
           <div style={{paddingTop:10}}>
-                <input type="radio" value='count' name="y-axis" onClick={this.handleRadioClick} defaultChecked/>Count (as percentage)
+                <input type="radio" value='count' name="y-axis" onClick={this.handleRadioClick}defaultChecked/>Count (as percentage)
             </div>
             <div style={{paddingTop:10}}>
                 <input type="radio" value='annual_income' name="y-axis" onClick={this.handleRadioClick}/>Average Annual Income (USD)
             </div>
             <div style={{paddingTop:10}}>
-                <input type="radio" value='credit_history_age' name="y-axis" onClick={this.handleRadioClick}/>Average Age of Credit History (Months)
+                <input type="radio" value='credit_history_age' name="y-axis" onClick={this.handleRadioClick}/>Average Age of Credit (Months)
             </div>
             <div style={{paddingTop:10}}>
                 <input type="radio" value='num_bank_accounts' name="y-axis" onClick={this.handleRadioClick}/>Average Number of Bank Accounts
