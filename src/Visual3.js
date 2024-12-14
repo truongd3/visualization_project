@@ -94,7 +94,7 @@ class Visual3 extends Component {
     const sliderRange = sliderBottom()
       .min(d3.min(data, d => d.age))
       .max(d3.max(data, d => d.age))
-      .width(200)
+      .width(svgWidth*0.75)
       .ticks(3)
       .default([d3.min(data, d => d.age), d3.max(data, d => d.age)])
       .fill('#85bb65')
@@ -111,7 +111,7 @@ class Visual3 extends Component {
       .data([null])
       .join('g')
       .attr('class', 'slider-g')
-      .attr('transform', `translate(${svgWidth/4},30)`);
+      .attr('transform', `translate(${svgWidth/6},30)`);
 
     gRange.call(sliderRange);
     
