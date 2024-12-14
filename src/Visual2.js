@@ -187,13 +187,21 @@ const scoreMap = {
     .style('justify-content', 'center')
     .style('align-items', 'center');
 
+    let yAxisToName = {'count': 'Percentage',
+      'annual_income': 'Annual Income (USD)',
+      'credit_history_age': 'Credit Age (Months)',
+      'num_bank_accounts': 'Number of Bank Accounts',
+      'num_of_loan': 'Number of Loans',
+      'delay_from_due_date': 'Delay from Due Date',
+      'credit_utilization_ratio': 'Credit Utilization Ratio (Percent)'};
+
     svg.selectAll('title')
     .data(['Title'])
     .join('text')
     .attr('class','title')
-    .attr('x',svgWidth/2-margin.left)
+    .attr('x',svgWidth/2)
     .attr('y',30)
-    .text('Credit Score Group vs. Balance & Debt')
+    .text('Credit Mix vs. '+yAxisToName[this.state.yAxis])
     .attr('font-size',16)
     .attr('font-weight','bold')
     .attr('text-anchor','middle')
@@ -209,13 +217,7 @@ const scoreMap = {
     .attr('font-weight','bold')
     .attr('text-anchor','middle')
 
-    let yAxisToName = {'count': 'Percentage',
-      'annual_income': 'Annual Income (USD)',
-      'credit_history_age': 'Credit Age (Months)',
-      'num_bank_accounts': 'Number of Bank Accounts',
-      'num_of_loan': 'Number of Loans',
-      'delay_from_due_date': 'Delay from Due Date',
-      'credit_utilization_ratio': 'Credit Utilization Ratio (Percent)'};
+
     
 
     svg.selectAll('y-axis-label')
@@ -229,7 +231,7 @@ const scoreMap = {
     .attr('font-weight','bold')
     .attr('text-anchor','middle')
     .attr('transform', `rotate(-90)`)
-    .attr('dy', 10)
+    .attr('dy', 13)
     .attr('dx', -height/2-margin.top)
 
   }
