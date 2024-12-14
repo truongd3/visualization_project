@@ -86,7 +86,7 @@ class FileUpload extends Component {
       .attr('y', d => y(d.count))
       .attr('width', x.bandwidth())
       .attr('height', d => ttHeight - y(d.count))
-      .attr('fill', 'steelblue');
+      .attr('fill', '#36454F');
 
     toolTipSVG.append('text')
       .attr('x', (ttWidth + barMargins.left + barMargins.right) / 2)
@@ -152,7 +152,7 @@ class FileUpload extends Component {
       .attr('y', d => y(d.length))
       .attr('width', d => Math.max(0, x(d.x1) - x(d.x0) - 1))
       .attr('height', d => ttHeight - y(d.length))
-      .attr('fill', 'steelblue');
+      .attr('fill', '#36454F');
 
     toolTipSVG.append('text')
       .attr('x', (ttWidth + barMargins.left + barMargins.right) / 2)
