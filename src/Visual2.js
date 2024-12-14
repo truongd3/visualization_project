@@ -192,7 +192,7 @@ const scoreMap = {
       'credit_history_age': 'Credit Age (Months)',
       'num_bank_accounts': 'Number of Bank Accounts',
       'num_of_loan': 'Number of Loans',
-      'delay_from_due_date': 'Delay from Due Date',
+      'delay_from_due_date': 'Delay from Due Date (Days)',
       'credit_utilization_ratio': 'Credit Utilization Ratio (Percent)'};
 
     svg.selectAll('title')
@@ -257,10 +257,10 @@ const scoreMap = {
                 <input type="radio" value='num_of_loan' name="y-axis" onClick={this.handleRadioClick}/>Average Number of Loans
             </div>
             <div style={{paddingTop:10}}>
-                <input type="radio" value='delay_from_due_date' name="y-axis" onClick={this.handleRadioClick}/>Average Delay from Due Date
+                <input type="radio" value='delay_from_due_date' name="y-axis" onClick={this.handleRadioClick}/>Average Delay from Due Date (Days)
             </div>
             <div style={{paddingTop:10}}>
-                <input type="radio" value={'credit_utilization_ratio'} name="y-axis" onClick={this.handleRadioClick}/>Average Credit Utilization Ratio
+                <input type="radio" value={'credit_utilization_ratio'} name="y-axis" onClick={this.handleRadioClick}/>Average Credit Utilization % Ratio 
             </div>
         </div>
       </div>
