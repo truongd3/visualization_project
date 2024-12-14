@@ -44,7 +44,6 @@ class Visualization1 extends Component {
   componentDidUpdate(){
     const data = this.props.csv_data;
     if (!data) return 0;
-    //console.log(data);
 
     const svgWidth = 300, svgHeight = 400;
     const margin = { top: 50, right: 10, bottom: 50, left: 75 },
@@ -53,7 +52,6 @@ class Visualization1 extends Component {
     
 
     const newData = calculateAverages(data);
-    //console.log(newData);
 
     const xScale = d3.scaleBand().domain(["Low","Average","High"]).range([0,width]).padding(0.2);
     const debtAvg = d3.max(newData, d => d.average_outstanding_debt);

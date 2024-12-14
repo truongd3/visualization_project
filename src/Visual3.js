@@ -13,10 +13,6 @@ class Visual3 extends Component {
     };
   }
 
-  componentDidMount() {
-   // this.createLineChart();
-  }
-
   componentDidUpdate() {
     this.createLineChart();
   }
@@ -30,8 +26,6 @@ class Visual3 extends Component {
     else{
       data = calculateAverageInterestRateByAge(this.state.filtered_data);
     }
-
-    //console.log(this.state.filtered_data);
 
     const svgWidth = 400, svgHeight = 400;
     const margin = { top: 100, right: 30, bottom: 50, left: 60 },

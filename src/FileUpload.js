@@ -164,16 +164,16 @@ class FileUpload extends Component {
   }
 
   csvToJson = (csv) => {
-    const lines = csv.split("\n").filter(line => line.trim()); // Remove empty rows
-    const headers = lines[0].split(",").map(header => header.trim()); // Trim headers
+    const lines = csv.split("\n").filter(line => line.trim());
+    const headers = lines[0].split(",").map(header => header.trim());
     const result = [];
 
     for (let i = 1; i < lines.length; i++) {
-      const currentLine = lines[i].split(",").map(value => value.trim()); // Trim each value
+      const currentLine = lines[i].split(",").map(value => value.trim());
       const obj = {};
 
       headers.forEach((header, index) => {
-        obj[header] = currentLine[index] || null; // Assign value or null if missing
+        obj[header] = currentLine[index] || null;
       });
 
       const parsedObj = {
@@ -229,7 +229,7 @@ class FileUpload extends Component {
         .attr("fill", "darkgray")
         .attr("y", 5)
         .attr("x", (d, i) => {
-          return quantitativeKeys.slice(0, i).reduce((total, key) => total + key.length * 8 + 20, 0); // Sum widths + 20 gaps
+          return quantitativeKeys.slice(0, i).reduce((total, key) => total + key.length * 8 + 20, 0);
         })
         .attr('flex', 1)
         .attr("rx", 5).attr("ry", 5)
@@ -252,7 +252,7 @@ class FileUpload extends Component {
         .attr("x", (d, i) => {
           const rectX = quantitativeKeys.slice(0, i).reduce((total, key) => total + key.length * 8 + 20, 0);
           const rectWidth = d.length * 8;
-          return rectX + rectWidth / 2; // Center text horizontally in the rectangle
+          return rectX + rectWidth / 2;
         })
         .attr('y', 20)
         .attr('text-anchor', 'middle')
@@ -267,7 +267,7 @@ class FileUpload extends Component {
         .attr("fill", "darkgray")
         .attr("y", 5)
         .attr("x", (d, i) => {
-          return categoricalKeys.slice(0, i).reduce((total, key) => total + key.length * 8 + 20, 0); // Sum widths + 20 gaps
+          return categoricalKeys.slice(0, i).reduce((total, key) => total + key.length * 8 + 20, 0);
         })
         .attr("flex", 1)
         .attr("rx", 5).attr("ry", 5)

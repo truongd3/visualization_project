@@ -30,11 +30,9 @@ class Visual2 extends Component {
       return;
     }
 
-
-    // Normalize the data
     const normalizedData = data.map(d => ({
       credit_mix: d.credit_mix ? d.credit_mix.trim() : null,
-      credit_score: d.credit_score ? d.credit_score : null, //credit_score: d.credit_score ? d.credit_score : null,
+      credit_score: d.credit_score ? d.credit_score : null,
       annual_income: d.annual_income ? d.annual_income : null,
       credit_history_age: d.credit_history_age ? d.credit_history_age : null,
       num_bank_accounts: d.num_bank_accounts ? d.num_bank_accounts : null,
@@ -44,20 +42,9 @@ class Visual2 extends Component {
 
     }));
 
-    /*
-       {name: 'Annual Income', value: 'annual_income'},
-        {name: 'Age of Credit History', value: 'credit_history_age'},
-        {name: 'Number of Bank Accounts', value: 'num_bank_accounts'},
-        {name: 'Number of Loans', value: 'num_of_loan'},
-        {name: 'Delay from Due Date', value: 'delay_from_due_date'},
-        {name: 'Number of Delayed Payments', value: 'num_of_delayed_payment'},
-    */
-
-    // Credit mix categories and scores
     const creditMixes = ["Bad", "Standard", "Good"];
     const creditScores = ["High", "Average", "Low"];
 
-// Assuming credit_score values are "Bad", "Standard", and "Good"
 const scoreMap = {
     'Low': 0,
     'Average': 1,
@@ -103,17 +90,14 @@ const scoreMap = {
   });
 
   var maxValue = d3.max(groupedData, d => d.Low+d.Average+d.High);
-  
 
-    // Set up chart dimensions and margins
     const svgWidth = 420, svgHeight = 400;
     const margin = { top: 60, right: 150, bottom: 60, left: 60 };
     const width = svgWidth - margin.left - margin.right;
     const height = svgHeight - margin.top - margin.bottom;
 
-    // Create the SVG container
     const svg = d3.select("#stacked-bar-chart");
-    svg.selectAll("*").remove();  // Remove any previous chart elements
+    svg.selectAll("*").remove();
 
     const chart = svg
       .attr("width", svgWidth)
@@ -121,7 +105,6 @@ const scoreMap = {
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    // X and Y scales
     const xScale = d3.scaleBand()
       .domain(creditMixes)
       .range([0, width])
@@ -131,16 +114,13 @@ const scoreMap = {
       .domain(this.state.yAxis === 'count' ? [0, 100] : [0, maxValue])
       .range([height, 0]);
 
-    // Color scale for the credit scores
     const colorScale = d3.scaleOrdinal()
       .domain(creditScores)
       .range(["green", "#ff7f00", "#e41a1c"]);
 
-    // Stack data based on credit scores
     const stackGen = d3.stack().keys(["Low", "Average", "High"]);
     const stackedSeries = stackGen(groupedData);
     
-    // Render stacked bars
     chart.selectAll(".layer")
       .data(stackedSeries)
       .join("g")
@@ -149,20 +129,17 @@ const scoreMap = {
       .data(d => d)
       .join("rect")
       .attr("x", d => xScale(d.data.credit_mix))
-      .attr("y", d => yScale(d[1]))  // Y position based on the stacked value
-      .attr("height", d => yScale(d[0]) - yScale(d[1]))  // Height of each segment
+      .attr("y", d => yScale(d[1]))
+      .attr("height", d => yScale(d[0]) - yScale(d[1]))
       .attr("width", xScale.bandwidth());
 
-    // Add X axis (credit mix)
     chart.append("g")
       .attr("transform", `translate(0, ${height})`)
       .call(d3.axisBottom(xScale));
 
-    // Add Y axis (percentage)
     chart.append("g")
       .call(d3.axisLeft(yScale).ticks(10).tickFormat( this.state.yAxis === 'count' ? d => `${d}%` : d=>d));
 
-    // Add a legend
     const legend = chart.append("g")
       .attr("transform", `translate(${width + 20}, ${height/2-margin.top})`);
 
@@ -216,9 +193,6 @@ const scoreMap = {
     .attr('font-size',14)
     .attr('font-weight','bold')
     .attr('text-anchor','middle')
-
-
-    
 
     svg.selectAll('y-axis-label')
     .data([null])
