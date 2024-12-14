@@ -315,12 +315,12 @@ class FileUpload extends Component {
         <div className="attribute-list-container">
           <h2 className="attribute-title">Quantitative Attributes:</h2>
           <div className="svg-container">
-            <svg className='mySvg1' style={{ width:2500 }}></svg>
+            <svg className='mySvg1' style={{ width:1400, marginLeft:20, marginRight:20}}></svg>
           </div>
 
           <h2 className="attribute-title">Categorical Attributes:</h2>
           <div className="svg-container">
-            <svg className='mySvg2' style={{ width:2500}}></svg>
+            <svg className='mySvg2' style={{ width:400, marginLeft:20}}></svg>
           </div>
         </div>
       </div>
